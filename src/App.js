@@ -1,44 +1,56 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react'; 
-import news_data from './store/news_data.json'
-import news_banner_data from './store/news_banner_data.json'
+import React from 'react';
 import {
-  SafeAreaView, 
-  StyleSheet ,
-  FlatList
+  SafeAreaView,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
-  
+import NewsCard from './components/NewsCard';
+
+import news_data from './store/news_data.json';
+import news_banner_data from './store/news_banner_data.json';
+
 function App() {
+  const renderNews = ({ item }) => <NewsCard news={item} />;
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-     
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerText}>News</Text>
+      <FlatList
+        ListHeaderComponent={() => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {news_banner_data.map(bannerNews => (
+              <Image
+                key={bannerNews.id}
+                style={styles.banner_image}
+                source={{ uri: bannerNews.imageUrl }}
+              />
+            ))}
+          </ScrollView>
+        )}
+        keyExtractor={item => item.u_id.toString()}
+        data={news_data}
+        renderItem={renderNews}
+      />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#eceff1',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  banner_image: {
+    height: Dimensions.get('window').height / 5,
+    width: Dimensions.get('window').width / 2,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 50,
   },
 });
 
